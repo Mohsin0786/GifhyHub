@@ -90,7 +90,7 @@ const Login = () => {
                 </form>
                 <div className="bg-gray-100 py-4 px-8">
                     <p className="text-sm text-gray-600 text-center">
-                        Don't have an account?{' '}
+                        Don't have an account?
                         <Link href="/signin" className="font-medium text-blue-600 hover:text-blue-500">
                             Sign up
                         </Link>
