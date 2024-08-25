@@ -44,7 +44,6 @@ const Home: React.FC = () => {
     }
   }, [currentPage]);
 
-  console.log(gifs)
   return (
     <div className='flex justify-center'>
       <div className='bg-white w-[auto] min-w-[816px] max-w-[1136px] max-h[500px] rounded-[20px] p-[24px] mt-[100px]'>
