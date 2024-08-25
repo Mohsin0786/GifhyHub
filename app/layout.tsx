@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from './AuthContext';
 // import SearchBar from './components/SearchBar'
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,10 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        {/* <SearchBar/> */}
-        {children}</body>
+    <AuthProvider>
+    <html>
+      <body>{children}</body>
     </html>
+  </AuthProvider>
   );
 }

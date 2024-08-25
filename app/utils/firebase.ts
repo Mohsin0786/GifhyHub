@@ -29,5 +29,8 @@ export const logout = () => {
 export const authStateChanged = (callback: (user: any) => void) => {
   return auth.onAuthStateChanged(callback);
 };
-
+export const getCurrentUser = () => {
+    
+    return auth.currentUser;
+  };
 export default auth;

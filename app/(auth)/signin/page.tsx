@@ -4,20 +4,34 @@ import { User, Mail, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { login } from '../../utils/firebase';
 import { useRouter } from 'next/navigation';
+import Loader from '@/app/components/Loader';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading,setLoading] = useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
         try {
-            await login(email, password);
+            const response = await login(email, password);
+            localStorage.setItem("user", JSON.stringify(response.user.uid));
             router.push('/');
+            setLoading(false);
         } catch (error) {
             console.error(error);
+            setLoading(false);
         }
     };
+
+    if(loading) {
+        return(
+            <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+                    <Loader />
+                </div>
+        )
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br bg-grey flex items-center justify-center p-4">
