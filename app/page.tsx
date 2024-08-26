@@ -63,7 +63,7 @@ const Home: React.FC = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search for GIFs"
-                className="w-full bg-transparent focus:outline-none"
+                className="w-full text-gray-900 bg-transparent focus:outline-none"
               />
             </div>
             <button
