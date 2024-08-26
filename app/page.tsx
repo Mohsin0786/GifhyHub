@@ -1,9 +1,10 @@
 'use client'
+
 import React, { useState, useEffect } from 'react';
-import GifGrid from './components/GifGrid'
+import Image from "next/image";
+import { Search } from 'lucide-react';
+import GifGrid from './components/GifGrid';
 import { fetchGifs } from './utils/giphy';
-import Image from "next/image"
-import SearchIcon from "../public/Search-icon.png"
 import Pagination from './components/Pagination';
 import Loader from './components/Loader';
 import LogoutButton from './components/LogoutButton';
@@ -14,65 +15,80 @@ const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [loading, setLoading] = useState(false)
-  const ITEMS_PER_PAGE = 3; // Number of items per page
+  const [loading, setLoading] = useState(false);
+  const ITEMS_PER_PAGE = 3;
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
 
   const handleSearch = async () => {
-    setCurrentPage(1); // Reset to the first page on new search
-    await loadGifs(1); // Load GIFs for the first page
+    setCurrentPage(1);
+    await loadGifs(1);
   };
 
   const loadGifs = async (page: number) => {
-    const offset = (page - 1) * ITEMS_PER_PAGE; // Calculate offset
-    setLoading(true); // Show loading spinner
+    const offset = (page - 1) * ITEMS_PER_PAGE;
+    setLoading(true);
     try {
       const result = await fetchGifs(searchTerm, ITEMS_PER_PAGE, offset);
-      setGifs(result); // Set the fetched GIFs
-      setTotalPages(Math.ceil(25 / ITEMS_PER_PAGE)); // Update total pages
-      setLoading(false); // Hide loading spinner
+      setGifs(result);
+      setTotalPages(Math.ceil(25 / ITEMS_PER_PAGE));
     } catch (error) {
       console.error('Failed to load GIFs:', error);
-      setLoading(false); // Hide loading spinner
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (searchTerm) {
-      loadGifs(currentPage); // Load GIFs whenever current page or search term changes
+      loadGifs(currentPage);
     }
   }, [currentPage]);
 
   return (
-    <div className='flex justify-center'>
-      <div className='bg-white w-[auto] min-w-[816px] max-w-[1136px] max-h[500px] rounded-[20px] p-[24px] mt-[100px]'>
-        <div className="p-4 flex justify-center h-[74px]">
-          <div className="flex items-center border rounded bg-[#F2F4F8] w-[100%] min-w-[642px] pt-6 pr-0 pb-6 pl-[13px]">
-            <Image src={SearchIcon} alt="Search Icon" className="w-6 h-6 ml-2" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search for GIFs"
-              className="border-none p-2 flex-1 rounded bg-[#F2F4F8] focus:outline-none"
-            />
-          </div>
-
-          <button onClick={handleSearch} className="p-[24px] bg-black text-white ml-2 rounded-[12px] flex justify-center items-center">Search</button>
+    <div className="min-h-screen bg-gray-100 p-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="absolute right-2 top-3 sm:right-4 sm:top-4">
+          <LogoutButton />
         </div>
-        {!loading && <GifGrid gifs={gifs} />}
-        {gifs.length > 0 && !loading && <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />}
-        {loading && <Loader />}
-      </div>
-      <div className='absolute right-2 top-3'>
-      <LogoutButton />
+        
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mt-16 sm:mt-24">
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="flex-grow flex items-center border rounded bg-[#F2F4F8] p-2">
+              <Search className="w-6 h-6 text-gray-400 mr-2" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search for GIFs"
+                className="w-full bg-transparent focus:outline-none"
+              />
+            </div>
+            <button
+              onClick={handleSearch}
+              className="w-full sm:w-auto px-6 py-3 bg-black text-white rounded-lg flex justify-center items-center"
+            >
+              Search
+            </button>
+          </div>
+          
+          {loading ? (
+            <Loader />
+          ) : (
+            <>
+              <GifGrid gifs={gifs} />
+              {gifs.length > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
